@@ -1,0 +1,115 @@
+{
+    "5": {
+        "inputs": {
+            "width": 832,
+            "height": 1216,
+            "batch_size": 1
+        },
+        "class_type": "EmptyLatentImage"
+    },
+    "6": {
+        "inputs": {
+            "clip": ["11", 0],
+            "text": "RAW photo of a highly realistic close-up portrait of a 40-year-old tech founder women. She has a fair, slightly tanned complexion with a few visible fine lines around his eyes and mouth, indicative of his age. Her eyes are a sharp blue with a focused, intelligent gaze, framed by slightly bushy eyebrows with a few stray hairs. He has light stubble covering his jawline, adding a rugged touch to his otherwise clean appearance. Her hair is dark brown with hints of gray at the temples, neatly styled in a modern, slightly tousled look. Her face is square-shaped with high cheekbones and a strong jawline. She wears rectangular, thin-rimmed glasses that complement his professional demeanor. Her lips are thin and set in a neutral expression, exuding calm confidence. He is dressed in a casual yet sophisticated outfit: a well-fitted, dark blue blazer over a white dress shirt, with the top button undone, hinting at his laid-back yet professional style. The background is a blurred office environment with hints of modern decor, placing him in his natural workspace. The lighting is soft and natural, highlighting the contours of his face and creating realistic shadows and highlights, enhancing the lifelike quality of the image."
+        },
+        "class_type": "CLIPTextEncode"
+    },
+    "8": {
+        "inputs": {
+            "vae": ["10", 0],
+            "samples": ["13", 0]
+        },
+        "class_type": "VAEDecode"
+    },
+    "9": {
+        "inputs": {
+            "images": ["8", 0],
+            "filename_prefix": "1116"
+        },
+        "class_type": "SaveImage"
+    },
+    "10": {
+        "inputs": {
+            "vae_name": "ae.safetensors"
+        },
+        "class_type": "VAELoader"
+    },
+    "11": {
+        "inputs": {
+            "type": "flux",
+            "clip_name1": "t5xxl_fp16.safetensors",
+            "clip_name2": "clip_l.safetensors"
+        },
+        "class_type": "DualCLIPLoader"
+    },
+    "12": {
+        "inputs": {
+            "unet_name": "flux1-dev.safetensors",
+            "weight_dtype": "fp8_e4m3fn"
+        },
+        "class_type": "UNETLoader"
+    },
+    "13": {
+        "inputs": {
+            "noise": ["25", 0],
+            "guider": ["22", 0],
+            "sigmas": ["17", 0],
+            "sampler": ["16", 0],
+            "latent_image": ["5", 0]
+        },
+        "class_type": "SamplerCustomAdvanced"
+    },
+    "16": {
+        "inputs": {
+            "sampler_name": "euler"
+        },
+        "class_type": "KSamplerSelect"
+    },
+    "17": {
+        "inputs": {
+            "model": ["73", 0],
+            "steps": 35,
+            "denoise": 1,
+            "scheduler": "simple"
+        },
+        "class_type": "BasicScheduler"
+    },
+    "22": {
+        "inputs": {
+            "model": ["73", 0],
+            "conditioning": ["60", 0]
+        },
+        "class_type": "BasicGuider"
+    },
+    "25": {
+        "inputs": {
+            "noise_seed": 502707332856213
+        },
+        "class_type": "RandomNoise"
+    },
+    "60": {
+        "inputs": {
+            "guidance": 2,
+            "conditioning": ["6", 0]
+        },
+        "class_type": "FluxGuidance"
+    },
+    "72": {
+        "inputs": {
+            "model": ["12", 0],
+            "lora_name": "flux-RealismLora.safetensors",
+            "strength_model": 1
+        },
+        "class_type": "LoraLoaderModelOnly"
+    },
+    "73": {
+        "inputs": {
+            "model": ["72", 0],
+            "width": 1024,
+            "height": 1024,
+            "max_shift": 0.05,
+            "base_shift": 0.5
+        },
+        "class_type": "ModelSamplingFlux"
+    }
+}
